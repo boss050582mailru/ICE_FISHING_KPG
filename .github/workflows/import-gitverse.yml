@@ -11,13 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download public GitVerse repository
+      - name: Download GitVerse source
         run: git clone --depth 1 https://gitverse.ru/Boss05/ICE_FISHING_KPG.git /tmp/ice-fishing-source
-      - name: Copy site files
+      - name: Copy site files without replacing GitHub metadata
         run: |
-          find /tmp/ice-fishing-source -maxdepth 2 -type f | head -30
-          cp -a /tmp/ice-fishing-source/. ./
-          rm -rf .git
+          tar -C /tmp/ice-fishing-source --exclude=.git -cf - . | tar -xf -
+          git status --short
       - name: Commit imported files
         run: |
           git config user.name "github-actions[bot]"
